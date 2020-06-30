@@ -1,3 +1,3 @@
 import React from 'react'
 
-export const Header = (props) => <h1>{props.course}</h1>
+export const Header = ({ course: { name } }) => <h1>{name}</h1>
