@@ -9,6 +9,9 @@ const mongoose = require('mongoose')
 
 logger.info('connecting to', config.MONGODB_URI)
 
+mongoose.set('useFindAndModify', false)
+mongoose.set('useCreateIndex', true)
+
 mongoose
   .connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
@@ -27,3 +30,5 @@ app.use('/api/persons', personsRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
+
+module.exports = app
