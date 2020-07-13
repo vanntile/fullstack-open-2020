@@ -14,7 +14,9 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState({ message: null, styleClass: null })
 
   const hook = () => {
-    S.getAll().then((r) => setPersons(r))
+    S.getAll()
+      .then((r) => setPersons(r))
+      .catch((e) => handleNotification({ message: e.error, styleClass: 'notificationbad' }))
   }
 
   const handleNotification = (notification, duration = 2500) => {
@@ -30,15 +32,19 @@ const App = () => {
     const existing = persons.find((p) => p.name === newName)
 
     existing
-      ? S.update(existing.id, { ...existing, number: newNumber }).then((response) => {
-          setPersons(persons.map((p) => (p.id === existing.id ? response : p)))
-        })
+      ? S.update(existing.id, { ...existing, number: newNumber })
+          .then((response) => {
+            setPersons(persons.map((p) => (p.id === existing.id ? response : p)))
+          })
+          .catch((e) => handleNotification({ message: e.error, styleClass: 'notificationbad' }))
       : S.addNew({
           name: newName,
           number: newNumber,
-        }).then((response) => {
-          setPersons(persons.concat(response))
         })
+          .then((response) => {
+            setPersons(persons.concat(response))
+          })
+          .catch((e) => handleNotification({ message: e.error, styleClass: 'notificationbad' }))
 
     setNewName('')
     setNewNumber('')
