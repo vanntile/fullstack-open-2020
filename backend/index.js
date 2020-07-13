@@ -1,9 +1,17 @@
 const express = require('express')
-const { request } = require('express')
+const morgan = require('morgan')
+const cors = require('cors')
 const app = express()
-const PORT = 3001
 
+const PORT = process.env.PORT || 3001
+
+morgan.token('body', function (req, res) {
+  return Object.keys(req.body).length !== 0 ? `- ${JSON.stringify(req.body)}` : ' '
+})
+
+app.use(cors())
 app.use(express.json())
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 let persons = [
   {
@@ -36,7 +44,7 @@ const generateNextId = () => {
   return newId
 }
 
-app.get('/info', (request, response) => {
+app.get('/api/info', (request, response) => {
   response.end(`Your phonebook has ${persons.length} contacts.\n${new Date()}`)
 })
 
@@ -46,8 +54,6 @@ app.get('/api/persons', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
-
-  console.log(body)
 
   if (!body) return response.status(400).json({ error: 'content missing' })
   if (!body.name) return response.status(400).json({ error: 'Name missing' })
