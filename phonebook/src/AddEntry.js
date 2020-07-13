@@ -9,7 +9,7 @@ export const AddEntry = ({ newName, newNumber, handleSubmit, handleChange }) => 
           name: <input type="text" name="name" onChange={handleChange} value={newName} />
         </div>
         <div>
-          number: <input type="number" name="phone" onChange={handleChange} value={newNumber} />
+          number: <input type="text" name="phone" onChange={handleChange} value={newNumber} />
         </div>
         <div>
           <button type="submit">add</button>
