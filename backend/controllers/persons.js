@@ -1,7 +1,8 @@
 const personsRouter = require('express').Router()
-const Phonebook = require('../models/Phonebook')
+const Phonebook = require('../models/phonebook')
 
 personsRouter.get('/info', (request, response) => {
+  response.end('ceva')
   Phonebook.find({}).then((result) => {
     response.end(`Your phonebook has ${result.length} contacts.\n${new Date()}`)
   })
