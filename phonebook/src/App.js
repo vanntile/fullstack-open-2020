@@ -4,15 +4,24 @@ import S from './services/service'
 import { Filter } from './Filter'
 import { AddEntry } from './AddEntry'
 import { Numbers } from './Numbers'
+import { Notification } from './Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setNewFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState({ message: null, styleClass: null })
 
   const hook = () => {
     S.getAll().then((r) => setPersons(r))
+  }
+
+  const handleNotification = (notification, duration = 2500) => {
+    setErrorMessage(notification)
+    setTimeout(() => {
+      setErrorMessage({ message: null, styleClass: null })
+    }, duration)
   }
 
   const handleSubmit = (e) => {
@@ -33,6 +42,10 @@ const App = () => {
 
     setNewName('')
     setNewNumber('')
+    handleNotification({
+      message: `"${newName}" created`,
+      styleClass: 'notificationgood',
+    })
   }
 
   const handleChange = (e) => {
@@ -46,7 +59,9 @@ const App = () => {
   const deletePerson = (id) => {
     S.remove(id)
       .then((r) => setPersons(persons.filter((p) => p.id !== id)))
-      .catch((e) => console.error(e))
+      .catch((e) => {
+        handleNotification({ message: `Error: "${id}" cannot be removed`, styleClass: 'notificationbad' })
+      })
   }
 
   useEffect(hook, [])
@@ -54,6 +69,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification {...errorMessage} />
       <Filter {...{ filter, handleFilter }} />
       <AddEntry {...{ newName, newNumber, handleSubmit, handleChange }} />
       <Numbers {...{ filter, persons, deletePerson }} />
