@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 import { Notification } from './components/Notification'
 import { Blog } from './components/Blog'
 import { Login } from './components/Login'
 import { WritePost } from './components/WritePost'
+import { Togglable } from './components/Togglable'
 import './App.css'
 
 import blogService from './services/blogs'
@@ -16,8 +17,11 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState({ message: null, styleClass: null })
 
-  const handleNotification = (notification, duration = 2500) => {
-    setErrorMessage(notification)
+  const loginFormRef = useRef()
+  const writeFormRef = useRef()
+
+  const handleNotification = ({ message, styleClass = 'notificationbad' }, duration = 2500) => {
+    setErrorMessage({ message, styleClass })
     setTimeout(() => {
       setErrorMessage({ message: null, styleClass: null })
     }, duration)
@@ -32,11 +36,12 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      loginFormRef.current.toggleVisibility()
 
       localStorage.setItem('user', JSON.stringify(user))
     } catch (e) {
       console.error(e)
-      handleNotification({ message: 'Wrong username or password', styleClass: 'notificationbad' })
+      handleNotification({ message: 'Wrong username or password' })
     }
   }
 
@@ -46,11 +51,12 @@ const App = () => {
     try {
       const newPost = await blogService.postNew({ author, title })
       setBlogs(blogs.concat(newPost))
+      writeFormRef.current.toggleVisibility()
 
       handleNotification({ message: `New blog post: ${title} by ${author}`, styleClass: 'notificationgood' })
     } catch (e) {
       console.error(e)
-      handleNotification({ message: e.error, styleClass: 'notificationbad' })
+      handleNotification({ message: e.error })
     }
   }
 
@@ -72,13 +78,31 @@ const App = () => {
       <h1>blogs</h1>
       <Notification {...errorMessage} />
       {user === null ? (
-        <Login {...{ username, setUsername, password, setPassword, handleLogin }} />
+        <Togglable buttonLabel="Login" ref={loginFormRef}>
+          <Login {...{ username, setUsername, password, setPassword, handleLogin }} />
+        </Togglable>
       ) : (
         <div>
           <p>{user.name} logged in</p>
-          <WritePost handleCreate={handleCreate} />
+
+          <Togglable buttonLabel="Create new post" ref={writeFormRef}>
+            <WritePost {...{ handleCreate }} />
+          </Togglable>
+
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog
+              key={blog.id}
+              {...{
+                blog,
+                updateBlog: (b) => {
+                  setBlogs(blogs.map((p) => (p.id === b.id ? b : p)))
+                },
+                deleteBlog: () => {
+                  setBlogs(blogs.filter((p) => p.id !== blog.id))
+                },
+                handleNotification,
+              }}
+            />
           ))}
         </div>
       )}

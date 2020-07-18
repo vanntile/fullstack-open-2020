@@ -17,8 +17,22 @@ const postNew = async (newPost) => {
   return response.data
 }
 
+const like = async ({ id, likes }) => {
+  const config = { headers: { Authorization: token } }
+  const response = await axios.put(`${baseUrl}/${id}`, { likes }, config)
+  return response.data
+}
+
+const deletePost = async ({ id }) => {
+  const config = { headers: { Authorization: token } }
+  const response = await axios.delete(`${baseUrl}/${id}`, config)
+  return response.data
+}
+
 export default {
   setToken,
   getAll,
   postNew,
+  like,
+  deletePost,
 }
