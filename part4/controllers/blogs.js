@@ -23,7 +23,7 @@ blogsRouter.post('/', async (request, response) => {
   const blog = new Blog({
     title: body.title || '',
     author: body.author,
-    url: body.url,
+    url: encodeURI(body.title.toLowerCase().replace(' ', '-')),
     likes: body.likes,
     user: user._id,
   })
