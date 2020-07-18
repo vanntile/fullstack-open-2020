@@ -1,4 +1,6 @@
 {
   "testEnvironment": "node",
-  "verbose": true
+  "verbose": true,
+  "testPathIgnorePatterns": ["<rootDir>/node_modules/", "<rootDir>/dist/"],
+  "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$"
 }
