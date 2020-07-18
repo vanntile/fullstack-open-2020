@@ -8,6 +8,8 @@ export const WritePost = ({ handleCreate }) => {
     <form
       onSubmit={(e) => {
         handleCreate(e, { title, author })
+        setTitle('')
+        setAuthor('')
       }}
     >
       <h2>Create a new blogpost</h2>
