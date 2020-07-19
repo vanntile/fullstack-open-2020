@@ -14,11 +14,8 @@ export const Blog = ({ blog, updateBlog, deleteBlog, handleNotification }) => (
         <button
           onClick={async () => {
             try {
-              console.log(1)
               const saved = await blogService.like({ id: blog.id, likes: blog.likes ? blog.likes + 1 : 1 })
-              console.log(2)
               updateBlog(saved)
-              console.log(3)
             } catch (e) {
               handleNotification({ message: e.error })
             }

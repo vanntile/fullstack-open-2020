@@ -17,7 +17,6 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [errorMessage, setErrorMessage] = useState({ message: null, styleClass: null })
 
-  const loginFormRef = useRef()
   const writeFormRef = useRef()
 
   const handleNotification = ({ message, styleClass = 'notificationbad' }, duration = 2500) => {
@@ -36,7 +35,7 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-      loginFormRef.current.toggleVisibility()
+      blogService.setToken(user.token)
 
       localStorage.setItem('user', JSON.stringify(user))
     } catch (e) {
@@ -78,7 +77,7 @@ const App = () => {
       <h1>blogs</h1>
       <Notification {...errorMessage} />
       {user === null ? (
-        <Togglable buttonLabel="Login" ref={loginFormRef}>
+        <Togglable buttonLabel="Login">
           <Login {...{ username, setUsername, password, setPassword, handleLogin }} />
         </Togglable>
       ) : (
