@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import ListGroup from 'react-bootstrap/ListGroup'
+
 import { Notification } from './components/Notification'
 import { Blog, initBlog } from './components/Blog'
 import { Login } from './components/Login'
@@ -27,7 +29,7 @@ const App = () => {
   }, [dispatch])
 
   return (
-    <div>
+    <div className="container">
       <h1>blogs</h1>
       <Notification />
       {user === null ? (
@@ -42,9 +44,11 @@ const App = () => {
             <WritePost writeFormRef={writeFormRef} />
           </Togglable>
 
-          {blogs.map((blog) => (
-            <Blog key={blog.id} {...{ blog }} />
-          ))}
+          <ListGroup className="my-4">
+            {blogs.map((blog) => (
+              <Blog key={blog.id} {...{ blog }} />
+            ))}
+          </ListGroup>
         </div>
       )}
     </div>

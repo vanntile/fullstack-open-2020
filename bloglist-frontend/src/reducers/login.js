@@ -9,6 +9,7 @@ const ACTION = {
 export const login = ({ username, password }) => async (dispatch) => {
   const data = await loginService.login({ username, password })
   blogService.setToken(data.token)
+  localStorage.setItem('user', JSON.stringify(data))
   dispatch({ type: ACTION.SET, data })
 }
 

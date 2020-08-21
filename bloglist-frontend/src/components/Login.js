@@ -19,8 +19,6 @@ export const Login = () => {
 
       setUsername('')
       setPassword('')
-
-      localStorage.setItem('user', JSON.stringify(user))
     } catch (e) {
       console.error(e)
       dispatch(setNotification({ message: 'Wrong username or password' }))
