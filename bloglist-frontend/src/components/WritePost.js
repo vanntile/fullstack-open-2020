@@ -1,8 +1,27 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 
-export const WritePost = ({ handleCreate }) => {
+import { setNotification } from './Notification'
+import { createNew } from './Blog'
+
+export const WritePost = ({ writeFormRef }) => {
+  const dispatch = useDispatch()
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
+
+  const handleCreate = async (event, { author, title }) => {
+    event.preventDefault()
+
+    try {
+      dispatch(createNew({ author, title }))
+      writeFormRef.current.toggleVisibility()
+
+      dispatch(setNotification({ message: `New blog post: ${title} by ${author}`, styleClass: 'notificationgood' }))
+    } catch (e) {
+      console.error(e)
+      dispatch(setNotification({ message: e.error }))
+    }
+  }
 
   return (
     <form

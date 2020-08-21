@@ -1,6 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-export const Login = ({ username, setUsername, password, setPassword, handleLogin }) => {
+import { setNotification } from './Notification'
+import { login } from '../reducers/login'
+
+export const Login = () => {
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.user)
+
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const handleLogin = async (event) => {
+    event.preventDefault()
+
+    try {
+      dispatch(login({ username, password }))
+
+      setUsername('')
+      setPassword('')
+
+      localStorage.setItem('user', JSON.stringify(user))
+    } catch (e) {
+      console.error(e)
+      dispatch(setNotification({ message: 'Wrong username or password' }))
+    }
+  }
+
   return (
     <form onSubmit={handleLogin}>
       <h2>Login into this application</h2>
