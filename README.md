@@ -12,4 +12,4 @@ following concepts:
 
 This are my solutions for the [proposed exercises](https://fullstackopen.com/en/).
 
-# Table of contents
+Each separate project is in its own folder, marked either by assignment task (i.e. `unicafe-redux`) or part id (i.e. `part4`).
